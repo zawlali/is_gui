@@ -27,7 +27,7 @@ The server provides endpoints to:
 
 1. Install the required dependencies:
 ```bash
-pip install flask tensorflow scikit-fuzzy numpy
+pip install flask tensorflow scikit-fuzzy numpy scipy networkx
 ```
 
 2. Make sure the `ann_scholarship_model.h5` model file is available in the same directory.

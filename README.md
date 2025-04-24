@@ -1,67 +1,66 @@
-# Scholar Jim - NGO Scholarship Selection App
+# Scholar Jim
 
-A modern Flutter application designed for NGOs to manage scholarship allocations using Artificial Neural Networks (ANN) and Fuzzy Logic systems.
+A scholarship management application that uses AI models to evaluate and recommend scholarships based on country-specific data.
 
-## Features
+## Prerequisites
 
-- **NGO Management**: Login and select from various NGO profiles
-- **Scholarship Selection**: Choose between ANN and Fuzzy Logic models for optimal scholarship allocation
-- **Country Focus**: Filter scholarship recipients by country and region
-- **Settings Customization**: Configure scholarship amounts, priority fields, and more
-- **Results Visualization**: View scholarship allocation results with detailed metrics and charts
+1. Install Visual Studio Code
+   - Download and install from [VS Code Official Site](https://code.visualstudio.com/)
 
-## Getting Started
+2. Install Flutter VS Code Extensions
+   - Open VS Code
+   - Go to Extensions (Ctrl+Shift+X)
+   - Search for and install:
+     - "Flutter" by Dart Code
+     - "Dart" by Dart Code
 
-### Prerequisites
+3. Install Flutter SDK
+   - When prompted by VS Code, click "Install" to get the Flutter SDK
+   - Alternatively, follow the [Flutter Installation Guide](https://docs.flutter.dev/get-started/install)
 
-- Flutter SDK (2.5.0 or higher)
-- Dart SDK (2.14.0 or higher)
+4. Install Python 3.12
+   - Open Microsoft Store
+   - Search for "Python 3.12"
+   - Click "Get" or "Install"
+   - This method ensures proper PATH variable configuration
 
-### Installation
+## Setup Instructions
 
-1. Clone the repository:
-```
-git clone https://github.com/yourusername/scholar_jim.git
-```
-
-2. Navigate to the project directory:
-```
-cd scholar_jim
-```
-
-3. Install dependencies:
-```
-flutter pub get
+1. Clone the repository
+```bash
+git clone https://github.com/zawlali/is_gui.git
+cd is_gui
 ```
 
-4. Run the app:
+2. Create Python Virtual Environment
+```bash
+# Navigate to project root
+cd lib/services
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On Windows:
+.\venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
 ```
-flutter run
+
+3. Install Python Dependencies
+```bash
+pip install flask tensorflow scikit-fuzzy numpy scipy networkx
 ```
 
-## Technology Stack
+4. Start the AI Models Server
+```bash
+# Ensure you're in lib/services directory with activated venv
+python web_server.py
+```
+The server will start at http://localhost:5000
 
-- Flutter for cross-platform mobile development
-- Google Fonts for modern typography
-- FL Chart for data visualization
-- Country Picker for easy country selection
-- Animated Text Kit for engaging animations
-
-## Demo Features
-
-This demo app includes:
-- Sample data for 6 fictional NGOs
-- Mock implementation of scholarship selection models
-- Simulated results from both ANN and Fuzzy Logic systems
-
-## Future Enhancements
-
-- Backend integration with real ML models
-- User authentication and profile management
-- Data export functionality (PDF, CSV)
-- Real-time collaboration features
-- Historical data tracking and comparison
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
+5. Run the Flutter Application
+   - Open the project in VS Code
+   - Select Chrome as your device (View > Command Palette > Flutter: Select Device)
+   - Press F5 or click Run > Start Debugging
+   - The app will launch in Chrome at http://localhost:54321 (port may vary)

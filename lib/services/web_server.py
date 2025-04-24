@@ -58,9 +58,9 @@ def predict(model_type):
         # Choose the appropriate model
         if model_type.lower() == 'fis':
             # FIS expects values in specific ranges
-            poverty_scaled = poverty_rate * 60  # 0-1 → 0-60
+            poverty_scaled = poverty_rate * 100  # 0-1 → 0-60
             education_scaled = education_level * 100  # 0-1 → 0-100
-            employment_scaled = employment_rate * 80  # 0-1 → 0-80
+            employment_scaled = employment_rate * 100  # 0-1 → 0-80
             
             result = fis_predictor.predict(poverty_scaled, education_scaled, employment_scaled)
         elif model_type.lower() == 'ann':
@@ -118,6 +118,7 @@ def evaluate_countries():
         # Process each country
         results = []
         for country in countries:
+            print("country",country)
             results.append(predictor.evaluate_country(country))
             
         # Sort results by score in descending order

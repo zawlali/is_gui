@@ -114,7 +114,7 @@ class _ParametersScreenState extends State<ParametersScreen> {
     // Find the country by name
     final countryParam = _countryParams.firstWhere(
       (cp) => cp.name == countryName,
-      orElse: () => CountryParams(name: ''),
+      orElse: () => CountryParams(name: '', povertyRate: 0.25, educationLevel: 0.5, employmentRate: 0.5),
     );
     
     if (countryParam.name.isEmpty) return;
@@ -425,131 +425,133 @@ class _ParametersScreenState extends State<ParametersScreen> {
     
     return Padding(
       padding: const EdgeInsets.all(24.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(
-                    color: Colors.grey.shade300,
-                    width: 1,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: Colors.grey.shade300,
+                      width: 1,
+                    ),
                   ),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: countryCode.length == 2
-                    ? Image.network(
-                        'https://flagcdn.com/w160/${countryCode}.png',
-                        width: 48,
-                        height: 48,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return CircleAvatar(
-                            radius: 24,
-                            backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
-                            child: Text(
-                              _selectedCountryName!.substring(0, 1),
-                              style: const TextStyle(
-                                color: AppTheme.primaryColor,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: countryCode.length == 2
+                      ? Image.network(
+                          'https://flagcdn.com/w160/${countryCode}.png',
+                          width: 48,
+                          height: 48,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return CircleAvatar(
+                              radius: 24,
+                              backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+                              child: Text(
+                                _selectedCountryName!.substring(0, 1),
+                                style: const TextStyle(
+                                  color: AppTheme.primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
                               ),
+                            );
+                          },
+                        )
+                      : CircleAvatar(
+                          radius: 24,
+                          backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+                          child: Text(
+                            _selectedCountryName!.substring(0, 1),
+                            style: const TextStyle(
+                              color: AppTheme.primaryColor,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                             ),
-                          );
-                        },
-                      )
-                    : CircleAvatar(
-                        radius: 24,
-                        backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
-                        child: Text(
-                          _selectedCountryName!.substring(0, 1),
-                          style: const TextStyle(
-                            color: AppTheme.primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
                           ),
                         ),
-                      ),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _selectedCountryName!,
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    Text(
-                      'Adjust parameters for scholarship allocation',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.grey.shade600,
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _selectedCountryName!,
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
-                    ),
-                  ],
+                      Text(
+                        'Adjust parameters for scholarship allocation',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 32),
-          Text(
-            'Socioeconomic Parameters',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-          const SizedBox(height: 8),
-          const Divider(),
-          const SizedBox(height: 24),
-          _buildSliderWithLabel(
-            label: 'National Poverty Rate',
-            value: _povertyRate,
-            min: 0.0,
-            max: 1.0,
-            divisions: 20,
-            onChanged: (value) {
-              setState(() {
-                _povertyRate = value;
-              });
-            },
-            valueLabel: '${(_povertyRate * 100).round()}%',
-            icon: Icons.money_off,
-          ),
-          const SizedBox(height: 32),
-          _buildSliderWithLabel(
-            label: 'Average Level of Education',
-            value: _educationLevel,
-            min: 0.0,
-            max: 1.0,
-            divisions: 20,
-            onChanged: (value) {
-              setState(() {
-                _educationLevel = value;
-              });
-            },
-            valueLabel: '${(_educationLevel * 100).round()}%',
-            icon: Icons.school,
-          ),
-          const SizedBox(height: 32),
-          _buildSliderWithLabel(
-            label: 'Employment Rate',
-            value: _employmentRate,
-            min: 0.0,
-            max: 1.0,
-            divisions: 20,
-            onChanged: (value) {
-              setState(() {
-                _employmentRate = value;
-              });
-            },
-            valueLabel: '${(_employmentRate * 100).round()}%',
-            icon: Icons.work,
-          ),
-        ],
+              ],
+            ),
+            const SizedBox(height: 32),
+            Text(
+              'Socioeconomic Parameters',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 8),
+            const Divider(),
+            const SizedBox(height: 24),
+            _buildSliderWithLabel(
+              label: 'National Poverty Rate',
+              value: _povertyRate,
+              min: 0.0,
+              max: 1.0,
+              divisions: 20,
+              onChanged: (value) {
+                setState(() {
+                  _povertyRate = value;
+                });
+              },
+              valueLabel: '${(_povertyRate * 100).round()}%',
+              icon: Icons.money_off,
+            ),
+            const SizedBox(height: 32),
+            _buildSliderWithLabel(
+              label: 'Average Level of Education',
+              value: _educationLevel,
+              min: 0.0,
+              max: 1.0,
+              divisions: 20,
+              onChanged: (value) {
+                setState(() {
+                  _educationLevel = value;
+                });
+              },
+              valueLabel: '${(_educationLevel * 100).round()}%',
+              icon: Icons.school,
+            ),
+            const SizedBox(height: 32),
+            _buildSliderWithLabel(
+              label: 'Employment Rate',
+              value: _employmentRate,
+              min: 0.0,
+              max: 1.0,
+              divisions: 20,
+              onChanged: (value) {
+                setState(() {
+                  _employmentRate = value;
+                });
+              },
+              valueLabel: '${(_employmentRate * 100).round()}%',
+              icon: Icons.work,
+            ),
+          ],
+        ),
       ),
     );
   }

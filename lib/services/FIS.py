@@ -128,6 +128,11 @@ class FuzzyInferenceSystem:
         Returns:
             dict: Results containing eligibility score and scholarship type
         """
+
+        print("poverty_val",poverty_val)
+        print("education_val",education_val)
+        print("employment_val",employment_val)
+
         # Evaluate eligibility score
         self.eligibility_simulator.input['poverty'] = poverty_val
         self.eligibility_simulator.input['education'] = education_val
@@ -144,6 +149,18 @@ class FuzzyInferenceSystem:
         eligibility_score = self.eligibility_simulator.output['eligibility']
         scholarship_score = self.scholarship_simulator.output['scholarship_type']
 
+        print("scholarship_score",scholarship_score)
+
+        # Calculate membership values for each scholarship type
+        scholarship_memberships = {}
+        for term_name in self.scholarship_type.terms:
+            membership_value = fuzz.interp_membership(
+                self.scholarship_type.universe, 
+                self.scholarship_type[term_name].mf, 
+                scholarship_score
+            )
+            scholarship_memberships[term_name] = float(membership_value)
+        
         # Identify best membership function name (vocational, academic, research)
         best_scholarship_type = max(
             self.scholarship_type.terms,
@@ -153,7 +170,7 @@ class FuzzyInferenceSystem:
                 scholarship_score
             )
         )
-        
+
         # Map scholarship type to readable format
         scholarship_type_readable = {
             'vocational': 'Vocational Training Grant',
@@ -161,10 +178,16 @@ class FuzzyInferenceSystem:
             'research': 'Research Grant'
         }
 
+        print("scholarship_memberships",scholarship_memberships)
+
         return {
             'eligibility_score': float(eligibility_score) / 100.0,  # Normalize to 0-1
             'scholarship_score': float(scholarship_score) / 100.0,  # Normalize to 0-1
-            'scholarship_type': scholarship_type_readable.get(best_scholarship_type, 'Unknown')
+            'scholarship_type': scholarship_type_readable.get(best_scholarship_type, 'Unknown'),
+            'scholarship_memberships': {
+                scholarship_type_readable.get(term, 'Unknown'): value 
+                for term, value in scholarship_memberships.items()
+            }
         }
     
     def evaluate_country(self, country_data):
@@ -190,31 +213,10 @@ class FuzzyInferenceSystem:
         # Get prediction
         prediction = self.predict(poverty_scaled, education_scaled, employment_scaled)
         
-        # Calculate membership degrees for each scholarship type
-        scholarship_types = {}
-        for term_name, term_mf in self.scholarship_type.terms.items():
-            degree = fuzz.interp_membership(
-                self.scholarship_type.universe,
-                term_mf.mf,
-                prediction['scholarship_score'] * 100  # Convert back to 0-100 scale
-            )
-            readable_name = {
-                'vocational': 'Vocational Training Grant',
-                'academic': 'Academic Scholarship',
-                'research': 'Research Grant'
-            }[term_name]
-            scholarship_types[readable_name] = float(degree)
-        
-        # Normalize scholarship type memberships to sum to 1
-        total = sum(scholarship_types.values())
-        if total > 0:
-            for key in scholarship_types:
-                scholarship_types[key] /= total
-        
         return {
             'country': country_data.get('name', 'Unknown'),
             'score': prediction['eligibility_score'],
-            'scholarshipTypes': scholarship_types,
+            'scholarshipTypes': prediction['scholarship_memberships'],
             'recommendedType': prediction['scholarship_type'],
             'details': {
                 'povertyRate': str(poverty_rate),
@@ -225,3 +227,11 @@ class FuzzyInferenceSystem:
 
 # Create singleton instance
 fis_predictor = FuzzyInferenceSystem() 
+
+if __name__ == "__main__":
+    result = fis_predictor.evaluate_country({
+        'povertyRate': 0.5,
+        'educationLevel': 0.3,
+        'employmentRate': 0.5
+    })
+    print(result)

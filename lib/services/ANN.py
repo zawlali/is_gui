@@ -84,24 +84,32 @@ class ANNPredictor:
         # Normalize eligibility score to 0-1 range
         eligibility_normalized = (prediction['eligibility_score'] - 1) / 2  # 1-3 → 0-1
         
-        # Calculate scholarship type weights
+        # Get the raw scholarship score from the prediction (ranges from 1-3)
+        scholarship_score = prediction['scholarship_score']
+        recommended_type = prediction['scholarship_type']
+
+        # Calculate weights based on the scholarship score position
+        # Initialize weights dictionary
         scholarship_types = {
             'Vocational Training Grant': 0.0,
             'Academic Scholarship': 0.0,
             'Research Grant': 0.0
         }
-        
-        recommended_type = prediction['scholarship_type']
-        scholarship_types[recommended_type] = 0.7  # Primary weight to recommended type
-        
-        # Distribute remaining weights based on education level
-        if recommended_type != 'Vocational Training Grant':
-            scholarship_types['Vocational Training Grant'] = 0.3 * (1 - education_level)
-        if recommended_type != 'Academic Scholarship':
-            scholarship_types['Academic Scholarship'] = 0.3 * education_level
-        if recommended_type != 'Research Grant':
-            scholarship_types['Research Grant'] = 0.3 * education_level * employment_rate
-            
+
+        # Normalize scholarship score to 0-1 range
+        normalized_score = (scholarship_score - 1) / 2  # 1-3 → 0-1
+
+        # Calculate weights based on position in the spectrum
+        # Lower score (closer to 0) = more vocational
+        # Middle score (around 0.5) = more academic
+        # Higher score (closer to 1) = more research
+        scholarship_types['Vocational Training Grant'] = max(0, 1 - (2 * normalized_score))  # Decreases as score increases
+        scholarship_types['Academic Scholarship'] = 1 - abs(2 * normalized_score - 1)  # Peaks at 0.5
+        scholarship_types['Research Grant'] = max(0, (2 * normalized_score) - 1)  # Increases as score increases
+
+        # Ensure primary recommendation gets significant weight
+        scholarship_types[recommended_type] = max(scholarship_types[recommended_type], 0.5)
+
         # Normalize weights to sum to 1
         total_weight = sum(scholarship_types.values())
         for key in scholarship_types:
