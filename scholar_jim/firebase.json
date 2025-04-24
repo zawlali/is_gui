@@ -1,0 +1,31 @@
+{
+  "hosting": {
+    "source": ".",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**",
+      "scripts/**",
+      "**/build/web/assets/assets/**"
+    ],
+    "frameworksBackend": {
+      "region": "asia-east1"
+    },
+    "predeploy": [
+      "flutter build web --release --web-renderer canvaskit"
+    ],
+    "public": "build/web",
+    "rewrites": [
+      {
+        "source": "/api/**",
+        "run": {
+          "serviceId": "fis-api",
+          "region": "asia-east1"
+        }
+      }
+    ]
+  },
+  "functions": {
+    "source": "functions"
+  }
+}
