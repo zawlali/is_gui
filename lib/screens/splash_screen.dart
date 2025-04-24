@@ -175,12 +175,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   Widget _buildNGOCard(NGO ngo) {
     // Map of logo asset paths based on NGO ID
     final logoMap = {
-      '1': 'icons/1.png',
-      '2': 'icons/2.png',
-      '3': 'icons/3.png',
-      '4': 'icons/4.png',
-      '5': 'icons/5.png',
-      '6': 'icons/6.png',
+      '1': 'assets/icons/1.png',
+      '2': 'assets/icons/2.png',
+      '3': 'assets/icons/3.png',
+      '4': 'assets/icons/4.png',
+      '5': 'assets/icons/5.png',
+      '6': 'assets/icons/6.png',
     };
 
     return GestureDetector(
